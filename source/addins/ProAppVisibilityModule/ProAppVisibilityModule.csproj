@@ -5,6 +5,7 @@
     <BUILD_MINOR Condition="'$(BUILD_MINOR)' == ''">0</BUILD_MINOR>
     <BUILD_PATCH Condition="'$(BUILD_PATCH)' == ''">0</BUILD_PATCH>
     <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">0</BUILD_NUMBER>
+    <BUILD_DATE Condition="'$(BUILD_DATE)' == ''">XX/XX/2018</BUILD_DATE>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -174,5 +175,14 @@
     </XmlPeek>
     <Message Importance="High" Text="old build number @(Peeked) new build number $(BUILD_MAJOR).$(BUILD_MINOR).$(BUILD_PATCH).$(BUILD_NUMBER)" />
     <XmlPoke XmlInputPath="Config.daml" Query="//@version[1]" Value="$(BUILD_MAJOR).$(BUILD_MINOR).$(BUILD_PATCH).$(BUILD_NUMBER)" />
-  </Target>
+    <XmlPeek XmlInputPath="Config.daml" 
+    Query="/x:ArcGIS/x:AddInInfo/x:Date/text()"
+    Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/DADF/Registry' /&gt;">
+      <Output TaskParameter="Result" ItemName="Peeked_Date" />
+    </XmlPeek>
+    <Message Importance="High" Text="Old build date @(Peeked_Date) New build date $(BUILD_DATE)" />
+    <XmlPoke XmlInputPath="Config.daml" 
+    Query="/x:ArcGIS/x:AddInInfo/x:Date"
+    Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.esri.com/DADF/Registry' /&gt;" Value="$(BUILD_DATE)"/>
+    </Target>
 </Project>
